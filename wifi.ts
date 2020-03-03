@@ -1,4 +1,4 @@
-namespace MuseIoT {
+namespace IoT {
     let flag = true;
     let httpReturnArray: string[] = []
     let inbound1 = ""
@@ -25,8 +25,8 @@ namespace MuseIoT {
     }
 
     // -------------- 1. Initialization ----------------
-    //%blockId=muselab_initialize_wifi
-    //%block="Initialize Muselab WiFi Booster and OLED"
+    //%blockId=wifi_ext_board_initialize_wifi
+    //%block="Initialize Wifi Extension Board and OLED"
     //% weight=90	
     //% blockGap=7	
     export function initializeWifi(): void {
@@ -131,7 +131,7 @@ namespace MuseIoT {
     }
 
     // -------------- 2. WiFi ----------------
-    //% blockId=muselab_set_wifi
+    //% blockId=wifi_ext_board_set_wifi
     //% block="Set wifi to ssid %ssid| pwd %pwd"   
     //% weight=80	
     export function setWifi(ssid: string, pwd: string): void {
@@ -139,7 +139,7 @@ namespace MuseIoT {
     }
 
     // -------------- 3. Cloud ----------------
-    //% blockId=muselab_set_thingspeak
+    //% blockId=wifi_ext_board_set_thingspeak
     //% block="Send Thingspeak key* %key|field1 %field1|field2 %field2|field3 %field3"
     //% weight=70	
     //% blockGap=7	
@@ -149,7 +149,7 @@ namespace MuseIoT {
 
     // -------------- 3. Cloud ----------------
 
-    //% blockId=muselab_set_ifttt
+    //% blockId=wifi_ext_board_set_ifttt
     //% block="Send IFTTT key* %key|event_name* %event|value1 %value1|value2 %value2|value3 %value3"
     //% weight=60
     //% blockGap=7		
@@ -158,7 +158,7 @@ namespace MuseIoT {
     }
 
     // -------------- 4. Others ----------------
-    //% blockId=muselab_set_wifi_hotspot
+    //% blockId=wifi_ext_board_set_wifi_hotspot
     //% block="Set hotspot to ssid %ssid| pwd %pwd"   
     //% weight=58	
     //% blockGap=7	
@@ -166,11 +166,27 @@ namespace MuseIoT {
         serial.writeLine("(AT+wifi_hotspot?ssid=" + ssid + "&pwd=" + pwd + ")");
     }
 
-    //%blockId=muselab_start_server
-    //%block="Start WiFi remote control"
+    //%blockId=wifi_ext_board_start_server_LAN
+    //%block="Start WiFi remote control (LAN)"
+    //% weight=56
+    //% blockGap=7		
+    export function startWebServer_LAN(): void {
+        flag = true
+        serial.writeLine("(AT+startWebServer)")
+        while (flag) {
+            serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
+            basic.pause(500)
+            if (!flag)
+                break;
+        }
+
+    }
+	
+	//%blockId=wifi_ext_board_start_server_WAN
+    //%block="Start WiFi remote control (WAN)"
     //% weight=55
     //% blockGap=7		
-    export function startWebServer(): void {
+    export function startWebServer_WAN(): void {
         flag = true
         serial.writeLine("(AT+startWebServer)")
         while (flag) {
@@ -182,8 +198,8 @@ namespace MuseIoT {
 
     }
 
-    //%blockId=muselab_initialize_wifi_normal
-    //%block="Initialize Muselab WiFi Booster"
+    //%blockId=wifi_ext_board_initialize_wifi_normal
+    //%block="Initialize Wifi Extension Board"
     //% weight=54	
     export function initializeWifiNormal(): void {
         serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
@@ -192,7 +208,7 @@ namespace MuseIoT {
     // -------------- 5. Advanced Wifi ----------------
 
     //%subcategory=More
-    //%blockId=muselab_generic_http
+    //%blockId=wifi_ext_board_generic_http
     //% block="Send generic HTTP method %method| http://%url| header %header| body %body"
     //% weight=50
     //% blockGap=7	
@@ -217,7 +233,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //% blockId="muselab_generic_http_return" 
+    //% blockId="wifi_ext_board_generic_http_return" 
     //% block="HTTP response (string array)"
     //% weight=49
     //% blockGap=7	
@@ -227,7 +243,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //% blockId="muselab_http_inbound" 
+    //% blockId="wifi_ext_board_http_inbound" 
     //% block="HTTP inbound %no"
     //% weight=48
     //% blockGap=7	
@@ -246,7 +262,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_http_outbound1
+    //%blockId=wifi_ext_board_http_outbound1
     //%block="Set HTTP outbound %no| %wordinds"
     //% weight=47	
     //% blockGap=7		
@@ -263,7 +279,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //% blockId="muselab_tostring" 
+    //% blockId="wifi_ext_board_tostring" 
     //% block="Convert number %no|to string"
     //% weight=46
 
@@ -273,7 +289,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_muse_mqtt
+    //%blockId=wifi_ext_board_muse_mqtt
     //%block="Connect to Muse MQTT server"
     //% weight=44
     //% blockGap=7	
@@ -286,7 +302,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //% blockId=muselab_general_mqtt
+    //% blockId=wifi_ext_board_general_mqtt
     //% block="Connect MQTT server %host| port %port| client id %clientId| username %username| password %pwd"
     //% weight=43
     //% blockGap=7	
@@ -295,7 +311,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_mqtt_publish
+    //%blockId=wifi_ext_board_mqtt_publish
     //% block="MQTT publish topic %topic| payload %payload"
     //% weight=42	
     //% blockGap=7	
@@ -304,7 +320,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_mqtt_subscribe
+    //%blockId=wifi_ext_board_mqtt_subscribe
     //% block="MQTT subscribe topic %topic"
     //% weight=41	
     export function mqttSubscribe(topic: string): void {
@@ -314,7 +330,7 @@ namespace MuseIoT {
     // -------------- 6. General ----------------		
 
     //%subcategory=More
-    //%blockId=muselab_battery
+    //%blockId=wifi_ext_board_battery
     //%block="Get battery level"
     //% weight=40
     //% blockGap=7		
@@ -324,7 +340,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_version
+    //%blockId=wifi_ext_board_version
     //%block="Get firmware version"
     //% weight=39	
     //% blockGap=7		
@@ -333,7 +349,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_at
+    //%blockId=wifi_ext_board_at
     //%block="Send AT command %command"
     //% weight=30	
     //% blockGap=7		
@@ -343,7 +359,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_test
+    //%blockId=wifi_ext_board_test
     //%block="Send AT test"
     //% weight=20	
     //% blockGap=7		
@@ -352,7 +368,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_deep_sleep
+    //%blockId=wifi_ext_board_deep_sleep
     //%block="Set deep sleep %second| second"
     //% weight=15	
     //% blockGap=7	
@@ -361,7 +377,7 @@ namespace MuseIoT {
     }
 
     //%subcategory=More
-    //%blockId=muselab_forever_sleep
+    //%blockId=wifi_ext_board_forever_sleep
     //%block="Soft trun off"
     //% weight=14	
     export function setTurnOff(): void {

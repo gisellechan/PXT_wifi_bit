@@ -1,7 +1,7 @@
 {
     "name": "wifi-test",
     "version": "1.0.0",
-    "description": "Blocks to simplify using muselab products in PXT",
+    "description": "This is the Wifi extension for SMARTHON Camera Kit in PXT",
     "license": "MIT",
     "dependencies": {
         "core": "*",
