@@ -6,30 +6,6 @@ namespace MuseIoT {
     let outbound1 = ""
     let outbound2 = ""
 
-    export enum arcgisFunction {
-        //% block="Add"
-        add,
-        //% block="Update"
-        update
-    }
-
-    export enum ArcgisSensorSelect {
-        //% block="Wind direction"
-        wind_direction,
-        //% block="Wind speed"
-        winf_speed,
-        //% block="Rain fall"
-        rain_fall,
-        //% block="PM 2.5"
-        pm_2_5,
-        //% block="Temperature sensor"
-        temperature_sensor,
-        //% block="Analog input"
-        analog_input,
-        //% block="Digital input"
-        digital_input
-    }
-
     export enum httpMethod {
         //% block="GET"
         GET,
@@ -172,13 +148,6 @@ namespace MuseIoT {
     }
 
     // -------------- 3. Cloud ----------------
-    //% blockId=muselab_set_musespeak
-    //% block="Send data.muselab.cc key* %key|field1 %field1|field2 %field2|field3 %field3|field4 %field4|field5 %field5|field6 %field6"
-    //% weight=65	
-    //% blockGap=7	
-    export function sendMusespeak(key: string, field1: number, field2: number, field3: number, field4: number, field5: number, field6: number): void {
-        serial.writeLine("(AT+http?method=GET&url=18.188.188.94:3000/update?key=" + key + "&field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + "&field4=" + field4 + "&field5=" + field5 + "&field6=" + field6 + "&field7=0" + "&header=&body=)");
-    }
 
     //% blockId=muselab_set_ifttt
     //% block="Send IFTTT key* %key|event_name* %event|value1 %value1|value2 %value2|value3 %value3"
@@ -186,20 +155,6 @@ namespace MuseIoT {
     //% blockGap=7		
     export function sendIFTTT(key: string, eventname: string, value1: number, value2: number, value3: number): void {
         serial.writeLine("(AT+ifttt?key=" + key + "&event=" + eventname + "&value1=" + value1 + "&value2=" + value2 + "&value3=" + value3 + ")");
-    }
-
-    //% blockId=muselab_set_arcgis
-    //% block="Send ArcGIS Online feature function %arcgisfunction|Server name* %servername|Service ID* %featureserviceid|Layer Name* %layername|Location X* %x|Location Y* %y|sensor_type %sensortype|sensor_id %sensorid|sensor_reading %reading|objectid(For update only) %objectid"
-    //% weight=59	
-    export function sendArcgis(arcgisfunction: arcgisFunction, servername: string, featureserviceid: string, layername: string, x: string, y: string, sensortype: string, sensorid: string, reading: number, objectid: number): void {
-        switch (arcgisfunction) {
-            case arcgisFunction.add:
-                serial.writeLine("(AT+arcgis?arcgisfunction=add&servername=" + servername + "&featureserviceid=" + featureserviceid + "&layername=" + layername + "&reading=" + reading + "&sensortype=" + sensortype + "&sensorid=" + sensorid + "&x=" + x + "&y=" + y + ")");
-                break
-            case arcgisFunction.update:
-                serial.writeLine("(AT+arcgis?arcgisfunction=update&servername=" + servername + "&featureserviceid=" + featureserviceid + "&layername=" + layername + "&objectid=" + objectid + "&reading=" + reading + "&sensortype=" + sensortype + "&sensorid=" + sensorid + "&x=" + x + "&y=" + y + ")");
-                break
-        }
     }
 
     // -------------- 4. Others ----------------
