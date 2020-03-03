@@ -1,14 +1,16 @@
 {
-    "name": "pxt-camera",
+    "name": "wifi-test",
     "version": "1.0.0",
-    "description": "This is the extension for SMARTHON Camera Kit in PXT",
+    "description": "Blocks to simplify using muselab products in PXT",
     "license": "MIT",
     "dependencies": {
-        "core": "*"		
+        "core": "*",
+		"SSD1306_OLED": "github:muselab/pxt-muselab-oled#v1.1.1"
     },
     "files": [
         "README.md",
-        "camera.ts"
+        "ns.ts",
+        "wifi.ts"
     ],
     "testFiles": [
         "tests.ts"
