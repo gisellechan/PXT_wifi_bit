@@ -7,10 +7,12 @@ namespace IoT {
     let outbound2 = ""
     let temp_cmd = ""
 	let lan_cmd = ""
+	let wan_cmd = ""
 	let Lan_connected = false
 	let Wan_connected = false
 	type EvtAct = () => void;
 	let LAN_Remote_Conn: EvtAct = null;
+	let WAN_Remote_Conn: EvtAct = null;
 
     export enum httpMethod {
         //% block="GET"
@@ -88,6 +90,10 @@ namespace IoT {
 					lan_cmd = temp_cmd
 					MuseOLED.showString(lan_cmd)
 					if (LAN_Remote_Conn) LAN_Remote_Conn()
+			} else if (Wan_connected){
+					wan_cmd = temp_cmd
+					MuseOLED.showString(wan_cmd)
+					if (WAN_Remote_Conn) WAN_Remote_Conn()
 			} else {
 				MuseOLED.showString(temp_cmd)
 			}
@@ -127,7 +133,7 @@ namespace IoT {
     // -------------- 4. Others ----------------
     //% blockId=wifi_ext_board_set_wifi_hotspot
     //% block="Set hotspot to ssid %ssid| pwd %pwd"   
-    //% weight=58	
+    //% weight=59	
     //% blockGap=7	
     export function setWifiHotspot(ssid: string, pwd: string): void {
         serial.writeLine("(AT+wifi_hotspot?ssid=" + ssid + "&pwd=" + pwd + ")");
@@ -135,7 +141,7 @@ namespace IoT {
 
     //%blockId=wifi_ext_board_start_server_LAN
     //%block="Start WiFi remote control (LAN)"
-    //% weight=57
+    //% weight=58
     //% blockGap=7		
     export function startWebServer_LAN(): void {
         flag = true
@@ -153,7 +159,7 @@ namespace IoT {
 
     //%blockId=wifi_ext_board_lan_command
     //%block="LAN control command"
-    //% weight=56
+    //% weight=57
     //% blockGap=7		
     export function control_command_LAN(): string {
 
@@ -163,7 +169,7 @@ namespace IoT {
 	
 	//%blockId=wifi_ext_board_on_LAN_connect
     //%block="On LAN connected"
-    //% weight=55
+    //% weight=56
     //% blockGap=7	
 	export function on_LAN_remote(handler: () => void): void {
         LAN_Remote_Conn = handler;
@@ -171,11 +177,12 @@ namespace IoT {
 
     //%blockId=wifi_ext_board_start_server_WAN
     //%block="Start WiFi remote control (WAN)"
-    //% weight=54
+    //% weight=55
     //% blockGap=7		
     export function startWebServer_WAN(): void {
         flag = true
         serial.writeLine("(AT+startWebServer)")
+		Wan_connected =true 
         while (flag) {
 
             serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
@@ -188,15 +195,20 @@ namespace IoT {
 
     //%blockId=wifi_ext_board_wan_command
     //%block="WAN control command"
-    //% weight=53
-
+    //% weight=54
+	//% blockGap=7	
     export function control_command_WAN(): string {
 
-        return temp_cmd;
+        return wan_cmd;
 
     }
 
-
+	//%blockId=wifi_ext_board_on_wan_connect
+    //%block="On WAN connected"
+    //% weight=53
+	export function on_WAN_remote(handler: () => void): void {
+        WAN_Remote_Conn = handler;
+    }
 
     // -------------- 5. Advanced Wifi ----------------
 
