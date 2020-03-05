@@ -5,6 +5,7 @@ namespace IoT {
     let inbound2 = ""
     let outbound1 = ""
     let outbound2 = ""
+    let temp_cmd = ""
 
     export enum httpMethod {
         //% block="GET"
@@ -34,87 +35,43 @@ namespace IoT {
         MuseOLED.init(32, 128)
 
         serial.onDataReceived(serial.delimiters(Delimiters.NewLine), () => {
-            let temp = serial.readLine()
+            temp_cmd = serial.readLine()
+            MuseOLED.showString(temp_cmd)
             let tempDeleteFirstCharacter = ""
 
-            if (temp.charAt(0).compare("#") == 0) {
-                tempDeleteFirstCharacter = temp.substr(1, 20)
+            if (temp_cmd.charAt(0).compare("#") == 0) {
+                tempDeleteFirstCharacter = temp_cmd.substr(1, 20)
                 httpReturnArray.push(tempDeleteFirstCharacter)
-            } else if (temp.charAt(0).compare("*") == 0) {
+            } else if (temp_cmd.charAt(0).compare("*") == 0) {
 
                 // For digital, pwm, servo
-                let mode = temp.substr(1, 1)
+                let mode = temp_cmd.substr(1, 1)
                 let intensity = 0
                 let pin = 0
 
-                // For motor and car
-                let motor = 0
-                let direction = 0
-
-                // For control 2 motor same time mode
-                let direction1 = 0
-                let direction2 = 0
-                let intensity1 = 0
-                let intensity2 = 0
-
                 if (mode == "0") {	//digital
-                    pin = parseInt(temp.substr(3, 2))
-                    intensity = parseInt(temp.substr(2, 1))
+                    pin = parseInt(temp_cmd.substr(3, 2))
+                    intensity = parseInt(temp_cmd.substr(2, 1))
 
                     pins.digitalWritePin(pin, intensity)
+
                 } else if (mode == "1") { //pwm
-                    pin = parseInt(temp.substr(5, 2))
-                    intensity = pins.map(parseInt(temp.substr(2, 3)), 100, 900, 0, 1023)
+                    pin = parseInt(temp_cmd.substr(5, 2))
+                    intensity = pins.map(parseInt(temp_cmd.substr(2, 3)), 100, 900, 0, 1023)
 
                     pins.analogWritePin(pin, intensity)
+
                 } else if (mode == "2") { //servo
-                    pin = parseInt(temp.substr(5, 2))
-                    intensity = pins.map(parseInt(temp.substr(2, 3)), 100, 900, 0, 180)
+                    pin = parseInt(temp_cmd.substr(5, 2))
+                    intensity = pins.map(parseInt(temp_cmd.substr(2, 3)), 100, 900, 0, 180)
 
                     pins.servoWritePin(pin, intensity)
-                } else if (mode == "3") { //motor
-                    motor = parseInt(temp.substr(6, 1))
-                    direction = parseInt(temp.substr(5, 1))
-                    intensity = pins.map(parseInt(temp.substr(2, 3)), 100, 900, 0, 100)
-
-                //    MuseRover.motorOn(motor, direction, intensity)
-                } else if (mode == "4") { //car
-                    direction = parseInt(temp.substr(5, 1))
-                    intensity = pins.map(parseInt(temp.substr(2, 3)), 100, 900, 0, 100)
-
-                    if (direction == 0) {
-                    //   MuseRover.motorOn(0, 0, intensity)
-                    //   MuseRover.motorOn(1, 0, intensity)
-                    } else if (direction == 1) {
-                    //   MuseRover.motorOn(0, 1, intensity)
-                    //   MuseRover.motorOn(1, 1, intensity)
-                    } else if (direction == 2) {
-                    //    MuseRover.motorOn(0, 1, intensity)
-                    //    MuseRover.motorOn(1, 0, 0)
-                    } else if (direction == 3) {
-                    //    MuseRover.motorOn(0, 0, 0)
-                    //    MuseRover.motorOn(1, 1, intensity)
-                    } else if (direction == 4) {
-                    //    MuseRover.motorOn(0, 0, intensity)
-                    //    MuseRover.motorOn(1, 0, intensity)
-                    }
-                } else if (mode == "5") { //motor_2
-                    direction1 = parseInt(temp.substr(5, 1))
-                    intensity1 = pins.map(parseInt(temp.substr(2, 3)), 100, 900, 0, 100)
-                    direction2 = parseInt(temp.substr(9, 1))
-                    intensity2 = pins.map(parseInt(temp.substr(6, 3)), 100, 900, 0, 100)
-
-                //    MuseRover.motorOn(0, direction1, intensity1)
-                //    MuseRover.motorOn(1, direction2, intensity2)
 
                 }
 
-                //basic.showNumber(pin)
-                //basic.showNumber(intensity)
-
-            } else if (temp.charAt(0).compare("$") == 0) {
-                let no = parseInt(temp.substr(1, 1))
-                let string_word = temp.substr(2, 20)
+            } else if (temp_cmd.charAt(0).compare("$") == 0) {
+                let no = parseInt(temp_cmd.substr(1, 1))
+                let string_word = temp_cmd.substr(2, 20)
 
                 if (no == 1) {
                     inbound1 = string_word
@@ -123,7 +80,7 @@ namespace IoT {
                 }
 
             } else {
-                MuseOLED.showString(temp)
+                //MuseOLED.showString(temp_cmd)
             }
         })
 
@@ -174,6 +131,7 @@ namespace IoT {
         flag = true
         serial.writeLine("(AT+startWebServer)")
         while (flag) {
+
             serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
             basic.pause(500)
             if (!flag)
@@ -181,15 +139,26 @@ namespace IoT {
         }
 
     }
-	
-	//%blockId=wifi_ext_board_start_server_WAN
-    //%block="Start WiFi remote control (WAN)"
+
+    //%blockId=wifi_ext_board_lan_command
+    //%block="LAN control command"
     //% weight=55
+    //% blockGap=7		
+    export function control_command_LAN(): string {
+
+        return temp_cmd;
+
+    }
+
+    //%blockId=wifi_ext_board_start_server_WAN
+    //%block="Start WiFi remote control (WAN)"
+    //% weight=54
     //% blockGap=7		
     export function startWebServer_WAN(): void {
         flag = true
         serial.writeLine("(AT+startWebServer)")
         while (flag) {
+
             serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
             basic.pause(500)
             if (!flag)
@@ -198,14 +167,28 @@ namespace IoT {
 
     }
 
+    //%blockId=wifi_ext_board_wan_command
+    //%block="WAN control command"
+    //% weight=53
+
+    export function control_command_WAN(): string {
+
+        return temp_cmd;
+
+    }
+
+
+
+    // -------------- 5. Advanced Wifi ----------------
+
+    //%subcategory=More
     //%blockId=wifi_ext_board_initialize_wifi_normal
     //%block="Initialize Wifi Extension Board"
-    //% weight=54	
+    //% weight=52	
+    //% blockGap=7
     export function initializeWifiNormal(): void {
         serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
     }
-
-    // -------------- 5. Advanced Wifi ----------------
 
     //%subcategory=More
     //%blockId=wifi_ext_board_generic_http
@@ -385,7 +368,4 @@ namespace IoT {
     }
 
 }
-
-
-
 
