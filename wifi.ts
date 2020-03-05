@@ -6,6 +6,11 @@ namespace IoT {
     let outbound1 = ""
     let outbound2 = ""
     let temp_cmd = ""
+	let lan_cmd = ""
+	let Lan_connected = false
+	let Wan_connected = false
+	type EvtAct = () => void;
+	let LAN_Remote_Conn: EvtAct = null;
 
     export enum httpMethod {
         //% block="GET"
@@ -36,7 +41,7 @@ namespace IoT {
 
         serial.onDataReceived(serial.delimiters(Delimiters.NewLine), () => {
             temp_cmd = serial.readLine()
-            MuseOLED.showString(temp_cmd)
+            //MuseOLED.showString(temp_cmd)
             let tempDeleteFirstCharacter = ""
 
             if (temp_cmd.charAt(0).compare("#") == 0) {
@@ -77,11 +82,16 @@ namespace IoT {
                     inbound1 = string_word
                 } else if (no == 2) {
                     inbound2 = string_word
-                }
-
-            } else {
-                //MuseOLED.showString(temp_cmd)
-            }
+                }	
+					
+			} else if (Lan_connected) {
+					lan_cmd = temp_cmd
+					MuseOLED.showString(lan_cmd)
+					if (LAN_Remote_Conn) LAN_Remote_Conn()
+			} else {
+				MuseOLED.showString(temp_cmd)
+			}
+            
         })
 
         basic.pause(5000);
@@ -125,11 +135,12 @@ namespace IoT {
 
     //%blockId=wifi_ext_board_start_server_LAN
     //%block="Start WiFi remote control (LAN)"
-    //% weight=56
+    //% weight=57
     //% blockGap=7		
     export function startWebServer_LAN(): void {
         flag = true
         serial.writeLine("(AT+startWebServer)")
+		Lan_connected =true 
         while (flag) {
 
             serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
@@ -142,12 +153,20 @@ namespace IoT {
 
     //%blockId=wifi_ext_board_lan_command
     //%block="LAN control command"
-    //% weight=55
+    //% weight=56
     //% blockGap=7		
     export function control_command_LAN(): string {
 
-        return temp_cmd;
+        return lan_cmd;
 
+    }
+	
+	//%blockId=wifi_ext_board_on_LAN_connect
+    //%block="On LAN connected"
+    //% weight=55
+    //% blockGap=7	
+	export function on_LAN_remote(handler: () => void): void {
+        LAN_Remote_Conn = handler;
     }
 
     //%blockId=wifi_ext_board_start_server_WAN
