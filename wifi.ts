@@ -168,7 +168,7 @@ namespace IoT {
     }
 	
 	//%blockId=wifi_ext_board_on_LAN_connect
-    //%block="On LAN connected"
+    //%block="On LAN command received"
     //% weight=56
     //% blockGap=7	
 	export function on_LAN_remote(handler: () => void): void {
@@ -204,7 +204,7 @@ namespace IoT {
     }
 
 	//%blockId=wifi_ext_board_on_wan_connect
-    //%block="On WAN connected"
+    //%block="On WAN command received"
     //% weight=53
 	export function on_WAN_remote(handler: () => void): void {
         WAN_Remote_Conn = handler;
