@@ -110,74 +110,11 @@ namespace IoT {
     }
 
 
-    // -------------- 3. LAN/WAN Repmote ----------------
-    //%blockId=wifi_ext_board_start_server_LAN
-    //%block="Start WiFi remote control (LAN)"
-    //% weight=130
-    //% blockGap=7		
-    export function startWebServer_LAN(): void {
-        flag = true
-        serial.writeLine("(AT+startWebServer)")
-        Lan_connected = true
-        while (flag) {
 
-            serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
-            basic.pause(500)
-            if (!flag)
-                break;
-        }
-
-    }
-
-    //%blockId=wifi_ext_board_lan_command
-    //%block="LAN control command"
-    //% weight=125
-    //% blockGap=7		
-    export function control_command_LAN(): string {
-
-        return lan_cmd;
-
-    }
-
-    //%blockId=wifi_ext_board_on_LAN_connect
-    //%block="On LAN command received"
-    //% weight=120
-    export function on_LAN_remote(handler: () => void): void {
-        LAN_Remote_Conn = handler;
-    }
-
-    //%blockId=wifi_ext_board_start_server_WAN
-    //%block="Start WiFi remote control (WAN)"
-    //% weight=115
-    //% blockGap=7		
-    export function startWebServer_WAN(): void {
-        flag = true
-        serial.writeLine("(AT+pubnub)")
-        Wan_connected = true
-        
-    }
-
-    //%blockId=wifi_ext_board_wan_command
-    //%block="WAN control command"
-    //% weight=110
-    //% blockGap=7	
-    export function control_command_WAN(): string {
-
-        return wan_cmd;
-
-    }
-
-    //%blockId=wifi_ext_board_on_wan_connect
-    //%block="On WAN command received"
-    //% weight=105
-    export function on_WAN_remote(handler: () => void): void {
-        WAN_Remote_Conn = handler;
-    }
-
-    // -------------- 4. Cloud ----------------
+    // -------------- 3. Cloud ----------------
     //% blockId=wifi_ext_board_set_thingspeak
     //% block="Send Thingspeak key* %key|field1 %field1|field2 %field2|field3 %field3"
-    //% weight=100
+    //% weight=130
     //% blockGap=7	
     export function sendThingspeak(key: string, field1: number, field2: number, field3: number): void {
         serial.writeLine("(AT+thingspeak?key=" + key + "&field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + ")");
@@ -186,38 +123,24 @@ namespace IoT {
 
     //% blockId=wifi_ext_board_set_ifttt
     //% block="Send IFTTT key* %key|event_name* %event|value1 %value1|value2 %value2|value3 %value3"
-    //% weight=95
+    //% weight=125
     //% blockGap=7		
     export function sendIFTTT(key: string, eventname: string, value1: number, value2: number, value3: number): void {
         serial.writeLine("(AT+ifttt?key=" + key + "&event=" + eventname + "&value1=" + value1 + "&value2=" + value2 + "&value3=" + value3 + ")");
     }
 
-    // -------------- 5. Others ----------------
+	// -------------- 4. Others ----------------
     //% blockId=wifi_ext_board_set_wifi_hotspot
     //% block="Set hotspot to ssid %ssid| pwd %pwd"   
-    //% weight=90	
+    //% weight=120
     //% blockGap=7	
     export function setWifiHotspot(ssid: string, pwd: string): void {
         serial.writeLine("(AT+wifi_hotspot?ssid=" + ssid + "&pwd=" + pwd + ")");
     }
 
-
-
-    // -------------- 6. Advanced Wifi ----------------
-
-    //%subcategory=More
-    //%blockId=wifi_ext_board_initialize_wifi_normal
-    //%block="Initialize Wifi Extension Board"
-    //% weight=85
-    //% blockGap=7
-    export function initializeWifiNormal(): void {
-        serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
-    }
-
-    //%subcategory=More
     //%blockId=wifi_ext_board_generic_http
     //% block="Send generic HTTP method %method| http://%url| header %header| body %body"
-    //% weight=80
+    //% weight=115
     //% blockGap=7	
     export function sendGenericHttp(method: httpMethod, url: string, header: string, body: string): void {
         httpReturnArray = []
@@ -242,17 +165,17 @@ namespace IoT {
     //%subcategory=More
     //% blockId="wifi_ext_board_generic_http_return" 
     //% block="HTTP response (string array)"
-    //% weight=75
+    //% weight=110
     //% blockGap=7	
 
     export function getGenericHttpReturn(): Array<string> {
         return httpReturnArray;
     }
 
-    //%subcategory=More
+
     //% blockId="wifi_ext_board_http_inbound" 
     //% block="HTTP inbound %no"
-    //% weight=70
+    //% weight=105
     //% blockGap=7	
 
     export function getInbound(no: bound_no): string {
@@ -268,10 +191,10 @@ namespace IoT {
         return temp;
     }
 
-    //%subcategory=More
+
     //%blockId=wifi_ext_board_http_outbound1
     //%block="Set HTTP outbound %no| %wordinds"
-    //% weight=65	
+    //% weight=100
     //% blockGap=7		
     export function setOutbound(no: bound_no, wordinds: string): void {
 
@@ -284,6 +207,96 @@ namespace IoT {
                 break
         }
     }
+	
+	
+	
+	
+    // -------------- 5. Advanced Wifi ----------------
+
+    //%subcategory=More
+    //%blockId=wifi_ext_board_initialize_wifi_normal
+    //%block="Initialize Wifi Extension Board"
+    //% weight=95
+    //% blockGap=7
+    export function initializeWifiNormal(): void {
+        serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
+    }
+
+	
+	
+	// -------------- 6. LAN/WAN Repmote ----------------
+    //%subcategory=More
+	//%blockId=wifi_ext_board_start_server_LAN
+    //%block="Start WiFi remote control (LAN)"
+    //% weight=90
+    //% blockGap=7		
+    export function startWebServer_LAN(): void {
+        flag = true
+        serial.writeLine("(AT+startWebServer)")
+        Lan_connected = true
+        while (flag) {
+
+            serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
+            basic.pause(500)
+            if (!flag)
+                break;
+        }
+
+    }
+
+	//%subcategory=More
+    //%blockId=wifi_ext_board_lan_command
+    //%block="LAN control command"
+    //% weight=85
+    //% blockGap=7		
+    export function control_command_LAN(): string {
+
+        return lan_cmd;
+
+    }
+
+	//%subcategory=More
+    //%blockId=wifi_ext_board_on_LAN_connect
+    //%block="On LAN command received"
+    //% weight=80
+    export function on_LAN_remote(handler: () => void): void {
+        LAN_Remote_Conn = handler;
+    }
+
+	//%subcategory=More
+    //%blockId=wifi_ext_board_start_server_WAN
+    //%block="Start WiFi remote control (WAN)"
+    //% weight=75
+    //% blockGap=7		
+    export function startWebServer_WAN(): void {
+        flag = true
+        serial.writeLine("(AT+pubnub)")
+        Wan_connected = true
+        
+    }
+
+	//%subcategory=More
+    //%blockId=wifi_ext_board_wan_command
+    //%block="WAN control command"
+    //% weight=70
+    //% blockGap=7	
+    export function control_command_WAN(): string {
+
+        return wan_cmd;
+
+    }
+
+	//%subcategory=More
+    //%blockId=wifi_ext_board_on_wan_connect
+    //%block="On WAN command received"
+    //% weight=65
+    export function on_WAN_remote(handler: () => void): void {
+        WAN_Remote_Conn = handler;
+    }
+
+
+   // -------------- 7. Others (Advanced) ----------------
+    
 
     //%subcategory=More
     //% blockId="wifi_ext_board_tostring" 
@@ -320,7 +333,7 @@ namespace IoT {
     //%subcategory=More
     //%blockId=wifi_ext_board_mqtt_publish
     //% block="MQTT publish topic %topic| payload %payload"
-    //% weight=45	
+    //% weight=45
     //% blockGap=7	
     export function mqttPublish(topic: string, payload: string): void {
         serial.writeLine("(AT+mqttPub?topic=" + topic + "&payload=" + payload + ")");
@@ -349,7 +362,7 @@ namespace IoT {
     //%subcategory=More
     //%blockId=wifi_ext_board_version
     //%block="Get firmware version"
-    //% weight=30	
+    //% weight=30
     //% blockGap=7		
     export function sendVersion(): void {
         serial.writeLine("(AT+version)");
@@ -358,7 +371,7 @@ namespace IoT {
     //%subcategory=More
     //%blockId=wifi_ext_board_at
     //%block="Send AT command %command"
-    //% weight=25	
+    //% weight=25
     //% blockGap=7		
     export function sendAT(command: string): void {
         serial.writeLine(command);
@@ -368,7 +381,7 @@ namespace IoT {
     //%subcategory=More
     //%blockId=wifi_ext_board_test
     //%block="Send AT test"
-    //% weight=20	
+    //% weight=20
     //% blockGap=7		
     export function sendTest(): void {
         serial.writeLine("(AT+testing)");
@@ -377,7 +390,7 @@ namespace IoT {
     //%subcategory=More
     //%blockId=wifi_ext_board_deep_sleep
     //%block="Set deep sleep %second| second"
-    //% weight=15	
+    //% weight=15
     //% blockGap=7	
     export function setDeepSleep(second: number): void {
         serial.writeLine("(AT+deepsleep?time=" + second + ")");
@@ -386,7 +399,7 @@ namespace IoT {
     //%subcategory=More
     //%blockId=wifi_ext_board_forever_sleep
     //%block="Soft trun off"
-    //% weight=10	
+    //% weight=10
     export function setTurnOff(): void {
         serial.writeLine("(AT+deepsleep?time=0)");
     }
