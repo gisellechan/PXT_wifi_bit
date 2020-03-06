@@ -162,7 +162,7 @@ namespace IoT {
         serial.writeLine("(AT+http?method=" + temp + "&url=" + url + "&header=" + header + "&body=" + body + ")");
     }
 
-    //%subcategory=More
+    
     //% blockId="wifi_ext_board_generic_http_return" 
     //% block="HTTP response (string array)"
     //% weight=110
@@ -209,14 +209,21 @@ namespace IoT {
     }
 	
 	
-	
+    //% blockId="wifi_ext_board_tostring" 
+    //% block="Convert number %no|to string"
+    //% weight=95
+
+    export function changetostring(no: number): string {
+
+        return no.toString();
+    }
 	
     // -------------- 5. Advanced Wifi ----------------
 
     //%subcategory=More
     //%blockId=wifi_ext_board_initialize_wifi_normal
     //%block="Initialize Wifi Extension Board"
-    //% weight=95
+    //% weight=90
     //% blockGap=7
     export function initializeWifiNormal(): void {
         serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
@@ -228,7 +235,7 @@ namespace IoT {
     //%subcategory=More
 	//%blockId=wifi_ext_board_start_server_LAN
     //%block="Start WiFi remote control (LAN)"
-    //% weight=90
+    //% weight=85
     //% blockGap=7		
     export function startWebServer_LAN(): void {
         flag = true
@@ -247,7 +254,7 @@ namespace IoT {
 	//%subcategory=More
     //%blockId=wifi_ext_board_lan_command
     //%block="LAN control command"
-    //% weight=85
+    //% weight=80
     //% blockGap=7		
     export function control_command_LAN(): string {
 
@@ -258,7 +265,7 @@ namespace IoT {
 	//%subcategory=More
     //%blockId=wifi_ext_board_on_LAN_connect
     //%block="On LAN command received"
-    //% weight=80
+    //% weight=75
     export function on_LAN_remote(handler: () => void): void {
         LAN_Remote_Conn = handler;
     }
@@ -266,7 +273,7 @@ namespace IoT {
 	//%subcategory=More
     //%blockId=wifi_ext_board_start_server_WAN
     //%block="Start WiFi remote control (WAN)"
-    //% weight=75
+    //% weight=70
     //% blockGap=7		
     export function startWebServer_WAN(): void {
         flag = true
@@ -278,7 +285,7 @@ namespace IoT {
 	//%subcategory=More
     //%blockId=wifi_ext_board_wan_command
     //%block="WAN control command"
-    //% weight=70
+    //% weight=65
     //% blockGap=7	
     export function control_command_WAN(): string {
 
@@ -289,7 +296,7 @@ namespace IoT {
 	//%subcategory=More
     //%blockId=wifi_ext_board_on_wan_connect
     //%block="On WAN command received"
-    //% weight=65
+    //% weight=60
     export function on_WAN_remote(handler: () => void): void {
         WAN_Remote_Conn = handler;
     }
@@ -298,15 +305,6 @@ namespace IoT {
    // -------------- 7. Others (Advanced) ----------------
     
 
-    //%subcategory=More
-    //% blockId="wifi_ext_board_tostring" 
-    //% block="Convert number %no|to string"
-    //% weight=60
-
-    export function changetostring(no: number): string {
-
-        return no.toString();
-    }
 
     //%subcategory=More
     //%blockId=wifi_ext_board_muse_mqtt
