@@ -105,6 +105,7 @@ namespace IoT {
     //% blockId=wifi_ext_board_set_wifi
     //% block="Set wifi to ssid %ssid| pwd %pwd"   
     //% weight=135
+	//% blockGap=7	
     export function setWifi(ssid: string, pwd: string): void {
         serial.writeLine("(AT+wifi?ssid=" + ssid + "&pwd=" + pwd + ")");
     }
@@ -167,7 +168,6 @@ namespace IoT {
     //% block="HTTP response (string array)"
     //% weight=110
     //% blockGap=7	
-
     export function getGenericHttpReturn(): Array<string> {
         return httpReturnArray;
     }
@@ -177,7 +177,6 @@ namespace IoT {
     //% block="HTTP inbound %no"
     //% weight=105
     //% blockGap=7	
-
     export function getInbound(no: bound_no): string {
         let temp = ""
         switch (no) {
@@ -212,7 +211,6 @@ namespace IoT {
     //% blockId="wifi_ext_board_tostring" 
     //% block="Convert number %no|to string"
     //% weight=95
-
     export function changetostring(no: number): string {
 
         return no.toString();
@@ -229,8 +227,6 @@ namespace IoT {
         serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
     }
 
-	
-	
 	// -------------- 6. LAN/WAN Repmote ----------------
     //%subcategory=More
 	//%blockId=wifi_ext_board_start_server_LAN
@@ -250,30 +246,11 @@ namespace IoT {
         }
 
     }
-
-	//%subcategory=More
-    //%blockId=wifi_ext_board_lan_command
-    //%block="LAN control command"
-    //% weight=80
-    //% blockGap=7		
-    export function control_command_LAN(): string {
-
-        return lan_cmd;
-
-    }
-
-	//%subcategory=More
-    //%blockId=wifi_ext_board_on_LAN_connect
-    //%block="On LAN command received"
-    //% weight=75
-    export function on_LAN_remote(handler: () => void): void {
-        LAN_Remote_Conn = handler;
-    }
-
+	
 	//%subcategory=More
     //%blockId=wifi_ext_board_start_server_WAN
     //%block="Start WiFi remote control (WAN)"
-    //% weight=70
+    //% weight=80
     //% blockGap=7		
     export function startWebServer_WAN(): void {
         flag = true
@@ -283,9 +260,38 @@ namespace IoT {
     }
 
 	//%subcategory=More
+    //%blockId=wifi_ext_board_on_LAN_connect
+    //%block="On LAN command received"
+    //% weight=75
+	//% blockGap=7	
+    export function on_LAN_remote(handler: () => void): void {
+        LAN_Remote_Conn = handler;
+    }
+
+	//%subcategory=More
+    //%blockId=wifi_ext_board_on_wan_connect
+    //%block="On WAN command received"
+    //% weight=70
+	//% blockGap=7	
+    export function on_WAN_remote(handler: () => void): void {
+        WAN_Remote_Conn = handler;
+    }
+
+	//%subcategory=More
+    //%blockId=wifi_ext_board_lan_command
+    //%block="LAN control command"
+    //% weight=65
+    //% blockGap=7		
+    export function control_command_LAN(): string {
+
+        return lan_cmd;
+
+    }
+
+	//%subcategory=More
     //%blockId=wifi_ext_board_wan_command
     //%block="WAN control command"
-    //% weight=65
+    //% weight=60
     //% blockGap=7	
     export function control_command_WAN(): string {
 
@@ -293,18 +299,8 @@ namespace IoT {
 
     }
 
-	//%subcategory=More
-    //%blockId=wifi_ext_board_on_wan_connect
-    //%block="On WAN command received"
-    //% weight=60
-    export function on_WAN_remote(handler: () => void): void {
-        WAN_Remote_Conn = handler;
-    }
-
 
    // -------------- 7. Others (Advanced) ----------------
-    
-
 
     //%subcategory=More
     //%blockId=wifi_ext_board_muse_mqtt
@@ -341,6 +337,7 @@ namespace IoT {
     //%blockId=wifi_ext_board_mqtt_subscribe
     //% block="MQTT subscribe topic %topic"
     //% weight=40
+	//% blockGap=7
     export function mqttSubscribe(topic: string): void {
         serial.writeLine("(AT+mqttSub?topic=" + topic + ")");
     }
