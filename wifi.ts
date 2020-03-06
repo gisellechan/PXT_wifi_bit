@@ -88,14 +88,12 @@ namespace IoT {
 
             } else if (Lan_connected && temp_cmd.charAt(0).compare(",") == 0) {
                 lan_cmd = temp_cmd.substr(1, 20)
-                //MuseOLED.showString(lan_cmd)
                 if (LAN_Remote_Conn) LAN_Remote_Conn()
             } else if (Wan_connected && temp_cmd.charAt(0).compare(":") == 0) {
                 wan_cmd = temp_cmd.substr(1, 20)
-                //MuseOLED.showString(wan_cmd)
                 if (WAN_Remote_Conn) WAN_Remote_Conn()
             } else {
-                MuseOLED.showString(temp_cmd)
+                MuseOLED.showString(temp_cmd.substr(0,20))
             }
 
         })
