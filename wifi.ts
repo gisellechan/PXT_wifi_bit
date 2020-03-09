@@ -348,10 +348,19 @@ namespace IoT {
     //%blockId=wifi_ext_board_version
     //%block="Get firmware version"
     //% weight=30
+    //% blockGap=7	
     export function sendVersion(): void {
         serial.writeLine("(AT+version)");
     }
 
+    //%subcategory=More
+    //%blockId=wifi_ext_board_at
+    //%block="Send AT command %command"
+    //% weight=25
+    export function sendAT(command: string): void {
+        serial.writeLine(command);
+        flag = false
+    }
 	
 
 
