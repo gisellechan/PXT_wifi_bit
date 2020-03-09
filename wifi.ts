@@ -131,13 +131,7 @@ namespace IoT {
     }
 
 	// -------------- 4. Others ----------------
-    //% blockId=wifi_ext_board_set_wifi_hotspot
-    //% block="Set hotspot to ssid %ssid| pwd %pwd"   
-    //% weight=120
-    //% blockGap=7	
-    export function setWifiHotspot(ssid: string, pwd: string): void {
-        serial.writeLine("(AT+wifi_hotspot?ssid=" + ssid + "&pwd=" + pwd + ")");
-    }
+
 
     //%blockId=wifi_ext_board_generic_http
     //% block="Send generic HTTP method %method| http://%url| header %header| body %body"
@@ -215,6 +209,15 @@ namespace IoT {
 
         return no.toString();
     }
+	
+	
+	//% blockId=wifi_ext_board_set_wifi_hotspot
+    //% block="Set hotspot to ssid %ssid| pwd %pwd"   
+    //% weight=92
+    export function setWifiHotspot(ssid: string, pwd: string): void {
+        serial.writeLine("(AT+wifi_hotspot?ssid=" + ssid + "&pwd=" + pwd + ")");
+    }
+	
 	
     // -------------- 5. Advanced Wifi ----------------
 
@@ -299,7 +302,6 @@ namespace IoT {
 
     }
 
-
    // -------------- 7. Others (Advanced) ----------------
 
     //%subcategory=More
@@ -345,16 +347,6 @@ namespace IoT {
     // -------------- 6. General ----------------		
 
     //%subcategory=More
-    //%blockId=wifi_ext_board_battery
-    //%block="Get battery level"
-    //% weight=35
-    //% blockGap=7		
-
-    export function sendBattery(): void {
-        serial.writeLine("(AT+battery)");
-    }
-
-    //%subcategory=More
     //%blockId=wifi_ext_board_version
     //%block="Get firmware version"
     //% weight=30
@@ -367,37 +359,12 @@ namespace IoT {
     //%blockId=wifi_ext_board_at
     //%block="Send AT command %command"
     //% weight=25
-    //% blockGap=7		
     export function sendAT(command: string): void {
         serial.writeLine(command);
         flag = false
     }
+	
 
-    //%subcategory=More
-    //%blockId=wifi_ext_board_test
-    //%block="Send AT test"
-    //% weight=20
-    //% blockGap=7		
-    export function sendTest(): void {
-        serial.writeLine("(AT+testing)");
-    }
-
-    //%subcategory=More
-    //%blockId=wifi_ext_board_deep_sleep
-    //%block="Set deep sleep %second| second"
-    //% weight=15
-    //% blockGap=7	
-    export function setDeepSleep(second: number): void {
-        serial.writeLine("(AT+deepsleep?time=" + second + ")");
-    }
-
-    //%subcategory=More
-    //%blockId=wifi_ext_board_forever_sleep
-    //%block="Soft trun off"
-    //% weight=10
-    export function setTurnOff(): void {
-        serial.writeLine("(AT+deepsleep?time=0)");
-    }
 
 }
 
