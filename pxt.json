@@ -1,6 +1,6 @@
 {
     "name": "wifi-test",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "This is the Wifi extension for SMARTHON Camera Kit in PXT",
     "license": "MIT",
     "dependencies": {

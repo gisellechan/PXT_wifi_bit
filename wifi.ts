@@ -167,28 +167,11 @@ namespace IoT {
     }
 
 
-    //% blockId="wifi_ext_board_http_inbound" 
-    //% block="HTTP inbound %no"
-    //% weight=105
-    //% blockGap=7	
-    export function getInbound(no: bound_no): string {
-        let temp = ""
-        switch (no) {
-            case bound_no.bound1:
-                temp = inbound1;
-                break
-            case bound_no.bound2:
-                temp = inbound2;
-                break
-        }
-        return temp;
-    }
 
 
     //%blockId=wifi_ext_board_http_outbound1
     //%block="Set HTTP outbound %no| %wordinds"
     //% weight=100
-    //% blockGap=7		
     export function setOutbound(no: bound_no, wordinds: string): void {
 
         switch (no) {
@@ -202,13 +185,6 @@ namespace IoT {
     }
 	
 	
-    //% blockId="wifi_ext_board_tostring" 
-    //% block="Convert number %no|to string"
-    //% weight=95
-    export function changetostring(no: number): string {
-
-        return no.toString();
-    }
 	
 	
 	//% blockId=wifi_ext_board_set_wifi_hotspot
