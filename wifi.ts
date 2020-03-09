@@ -295,7 +295,6 @@ namespace IoT {
     //%blockId=wifi_ext_board_wan_command
     //%block="WAN control command"
     //% weight=60
-    //% blockGap=7	
     export function control_command_WAN(): string {
 
         return wan_cmd;
@@ -339,7 +338,6 @@ namespace IoT {
     //%blockId=wifi_ext_board_mqtt_subscribe
     //% block="MQTT subscribe topic %topic"
     //% weight=40
-	//% blockGap=7
     export function mqttSubscribe(topic: string): void {
         serial.writeLine("(AT+mqttSub?topic=" + topic + ")");
     }
@@ -350,7 +348,7 @@ namespace IoT {
     //%blockId=wifi_ext_board_version
     //%block="Get firmware version"
     //% weight=30
-    //% blockGap=7		
+    //% blockGap=7	
     export function sendVersion(): void {
         serial.writeLine("(AT+version)");
     }
