@@ -1,10 +1,6 @@
 namespace IoT {
     let flag = true;
     let httpReturnArray: string[] = []
-    let inbound1 = ""
-    let inbound2 = ""
-    let outbound1 = ""
-    let outbound2 = ""
     let temp_cmd = ""
     let lan_cmd = ""
     let wan_cmd = ""
@@ -25,12 +21,6 @@ namespace IoT {
         DELETE
     }
 
-    export enum bound_no {
-        //% block="1"
-        bound1,
-        //% block="2"
-        bound2
-    }
 
     // -------------- 1. Initialization ----------------
     //%blockId=wifi_ext_board_initialize_wifi
@@ -78,13 +68,7 @@ namespace IoT {
 
             } else if (temp_cmd.charAt(0).compare("$") == 0) {
                 let no = parseInt(temp_cmd.substr(1, 1))
-                let string_word = temp_cmd.substr(2, 20)
-
-                if (no == 1) {
-                    inbound1 = string_word
-                } else if (no == 2) {
-                    inbound2 = string_word
-                }
+                //let string_word = temp_cmd.substr(2, 20)
 
             } else if (Lan_connected && temp_cmd.charAt(0).compare(",") == 0) {
                 lan_cmd = temp_cmd.substr(1, 20)
@@ -161,31 +145,11 @@ namespace IoT {
     //% blockId="wifi_ext_board_generic_http_return" 
     //% block="HTTP response (string array)"
     //% weight=110
-    //% blockGap=7	
     export function getGenericHttpReturn(): Array<string> {
         return httpReturnArray;
     }
 
 
-
-
-    //%blockId=wifi_ext_board_http_outbound1
-    //%block="Set HTTP outbound %no| %wordinds"
-    //% weight=100
-    export function setOutbound(no: bound_no, wordinds: string): void {
-
-        switch (no) {
-            case bound_no.bound1:
-                outbound1 = wordinds;
-                break
-            case bound_no.bound2:
-                outbound2 = wordinds;
-                break
-        }
-    }
-	
-	
-	
 	
 	//% blockId=wifi_ext_board_set_wifi_hotspot
     //% block="Set hotspot to ssid %ssid| pwd %pwd"   
@@ -218,7 +182,7 @@ namespace IoT {
         Lan_connected = true
         while (flag) {
 
-            serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + "&outbound1=" + outbound1 + "&outbound2=" + outbound2 + ")")
+            serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + ")")
             basic.pause(500)
             if (!flag)
                 break;
