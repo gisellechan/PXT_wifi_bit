@@ -29,6 +29,8 @@ namespace IoT {
     //% blockGap=7	
     export function initializeWifi(): void {
         serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
+		serial.setTxBufferSize(64)
+		serial.setRxBufferSize(64)
         MuseOLED.init(32, 128)
 
         serial.onDataReceived(serial.delimiters(Delimiters.NewLine), () => {
@@ -77,7 +79,9 @@ namespace IoT {
                 wan_cmd = temp_cmd.substr(1, 20)
                 if (WAN_Remote_Conn) WAN_Remote_Conn()
             } else {
-                MuseOLED.showString(temp_cmd.substr(0,20))
+				if (temp_cmd.substr(0, 11) == "HTTP client")
+					temp_cmd = "Keep listen"
+				MuseOLED.showString(temp_cmd.substr(0,20))
             }
 
         })
