@@ -31,11 +31,11 @@ namespace IoT {
         serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
 		serial.setTxBufferSize(64)
 		serial.setRxBufferSize(64)
-        MuseOLED.init(32, 128)
+        OLED.init(64, 128)
 
         serial.onDataReceived(serial.delimiters(Delimiters.NewLine), () => {
             temp_cmd = serial.readLine()
-            //MuseOLED.showString(temp_cmd)
+            //OLED.showStringWithNewLine(temp_cmd)
             let tempDeleteFirstCharacter = ""
 
             if (temp_cmd.charAt(0).compare("#") == 0) {
@@ -81,7 +81,7 @@ namespace IoT {
             } else {
 				if (temp_cmd.substr(0, 11) == "HTTP client")
 					temp_cmd = "Keep listen"
-				MuseOLED.showString(temp_cmd.substr(0,20))
+				OLED.showStringWithNewLine(temp_cmd.substr(0,20))
             }
 
         })
