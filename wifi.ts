@@ -8,12 +8,16 @@ namespace IoT {
     let Lan_connected = false
     let Wan_connected = false
 	let Wifi_connected = false
-    type EvtAct = () => void;
-	type EvtAct2 =(WiFiMessage: string) => void;
-    let LAN_Remote_Conn: EvtAct = null;
-    let WAN_Remote_Conn: EvtAct = null;
-	let Wifi_Remote_Conn: EvtAct2 = null;
-    let myChannel = ""
+	let myChannel = ""
+	
+	type EvtAct =(WiFiMessage: string) => void;
+    let Wifi_Remote_Conn: EvtAct = null;
+	
+	let LAN_Remote_Conn: (LAN_Command:string) => void = null;
+	let WAN_Remote_Conn: (WAN_Command:string) => void = null;
+  
+	
+    
 
 
     export enum httpMethod {
@@ -80,10 +84,10 @@ namespace IoT {
 
             } else if (Lan_connected && temp_cmd.charAt(0).compare(",") == 0) {
                 lan_cmd = temp_cmd.substr(1, 20)
-                if (LAN_Remote_Conn) LAN_Remote_Conn()
+                if (LAN_Remote_Conn) LAN_Remote_Conn(lan_cmd)
             } else if (Wan_connected && temp_cmd.charAt(0).compare(":") == 0) {
                 wan_cmd = temp_cmd.substr(1, 20)
-                if (WAN_Remote_Conn) WAN_Remote_Conn()
+                if (WAN_Remote_Conn) WAN_Remote_Conn(wan_cmd)
             } else if (Wifi_connected && temp_cmd.charAt(0).compare(":") == 0) {
                 wifi_cmd = temp_cmd.substr(1, 20)
                 if (Wifi_Remote_Conn) Wifi_Remote_Conn(wifi_cmd)
@@ -201,8 +205,8 @@ namespace IoT {
     //%blockId=wifi_ext_board_on_LAN_connect
     //%block="On LAN command received"
     //% weight=75
-	//% blockGap=7	
-    export function on_LAN_remote(handler: () => void): void {
+	//% blockGap=7	draggableParameters=reporter
+    export function on_LAN_remote(handler: (LAN_Command:string) => void): void {
         LAN_Remote_Conn = handler;
     }
 
@@ -210,31 +214,12 @@ namespace IoT {
     //%blockId=wifi_ext_board_on_wan_connect
     //%block="On WAN command received"
     //% weight=70
-	//% blockGap=7	
-    export function on_WAN_remote(handler: () => void): void {
+	//% blockGap=7	draggableParameters=reporter
+    export function on_WAN_remote(handler: (WAN_Command:string) => void): void {
         WAN_Remote_Conn = handler;
     }
 
-	//%subcategory=Control
-    //%blockId=wifi_ext_board_lan_command
-    //%block="LAN control command"
-    //% weight=65
-    //% blockGap=7		
-    export function control_command_LAN(): string {
-
-        return lan_cmd;
-
-    }
-
-	//%subcategory=Control
-    //%blockId=wifi_ext_board_wan_command
-    //%block="WAN control command"
-    //% weight=60
-    export function control_command_WAN(): string {
-
-        return wan_cmd;
-
-    }
+	
 
    
 
