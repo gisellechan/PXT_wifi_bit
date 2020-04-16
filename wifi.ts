@@ -4,11 +4,16 @@ namespace IoT {
     let temp_cmd = ""
     let lan_cmd = ""
     let wan_cmd = ""
+	let wifi_cmd = ""
     let Lan_connected = false
     let Wan_connected = false
+	let Wifi_connected = false
     type EvtAct = () => void;
     let LAN_Remote_Conn: EvtAct = null;
     let WAN_Remote_Conn: EvtAct = null;
+	let Wifi_Remote_Conn: EvtAct = null;
+    let myChannel = ""
+
 
     export enum httpMethod {
         //% block="GET"
@@ -78,6 +83,9 @@ namespace IoT {
             } else if (Wan_connected && temp_cmd.charAt(0).compare(":") == 0) {
                 wan_cmd = temp_cmd.substr(1, 20)
                 if (WAN_Remote_Conn) WAN_Remote_Conn()
+            } else if (Wifi_connected && temp_cmd.charAt(0).compare(":") == 0) {
+                wifi_cmd = temp_cmd.substr(1, 20)
+                if (Wifi_Remote_Conn) Wifi_Remote_Conn()
             } else {
 				if (temp_cmd.substr(0, 11) == "HTTP client")
 					temp_cmd = "Keep listen"
@@ -155,26 +163,8 @@ namespace IoT {
 
 
 	
-	//% blockId=wifi_ext_board_set_wifi_hotspot
-    //% block="Set hotspot to ssid %ssid| pwd %pwd"   
-    //% weight=92
-    export function setWifiHotspot(ssid: string, pwd: string): void {
-        serial.writeLine("(AT+wifi_hotspot?ssid=" + ssid + "&pwd=" + pwd + ")");
-    }
-	
-	
-    // -------------- 5. Advanced Wifi ----------------
 
-    //%subcategory=More
-    //%blockId=wifi_ext_board_initialize_wifi_normal
-    //%block="Initialize Wifi Extension Board"
-    //% weight=90
-    //% blockGap=7
-    export function initializeWifiNormal(): void {
-        serial.redirect(SerialPin.P16, SerialPin.P8, BaudRate.BaudRate115200);
-    }
-
-	// -------------- 6. LAN/WAN Repmote ----------------
+	// -------------- 5. LAN/WAN Repmote ----------------
     //%subcategory=More
 	//%blockId=wifi_ext_board_start_server_LAN
     //%block="Start WiFi remote control (LAN)"
@@ -245,46 +235,7 @@ namespace IoT {
 
     }
 
-   // -------------- 7. Others (Advanced) ----------------
-
-    //%subcategory=More
-    //%blockId=wifi_ext_board_muse_mqtt
-    //%block="Connect to Muse MQTT server"
-    //% weight=55
-    //% blockGap=7	
-    export function connectMuseMQTT(): void {
-        serial.writeLine("(AT+startMQTT?host=13.58.53.42&port=1883&clientId=100&username=omlxmgsy&password=AoGUfQNPkeSH)");
-        while (true) {
-            serial.writeLine("(AT+write_sensor_data?p0=" + pins.analogReadPin(AnalogPin.P0) + "&p1=" + pins.analogReadPin(AnalogPin.P1) + "&p2=" + pins.analogReadPin(AnalogPin.P2) + ")")
-            basic.pause(500)
-        }
-    }
-
-    //%subcategory=More
-    //% blockId=wifi_ext_board_general_mqtt
-    //% block="Connect MQTT server %host| port %port| client id %clientId| username %username| password %pwd"
-    //% weight=50
-    //% blockGap=7	
-    export function connectgeneralMQTT(host: string, port: string, clientId: string, username: string, pwd: string): void {
-        serial.writeLine("(AT+startMQTT?host=" + host + "&port=" + port + "&clientId=" + clientId + "&username=" + username + "&password=" + pwd + ")");
-    }
-
-    //%subcategory=More
-    //%blockId=wifi_ext_board_mqtt_publish
-    //% block="MQTT publish topic %topic| payload %payload"
-    //% weight=45
-    //% blockGap=7	
-    export function mqttPublish(topic: string, payload: string): void {
-        serial.writeLine("(AT+mqttPub?topic=" + topic + "&payload=" + payload + ")");
-    }
-
-    //%subcategory=More
-    //%blockId=wifi_ext_board_mqtt_subscribe
-    //% block="MQTT subscribe topic %topic"
-    //% weight=40
-    export function mqttSubscribe(topic: string): void {
-        serial.writeLine("(AT+mqttSub?topic=" + topic + ")");
-    }
+   
 
     // -------------- 6. General ----------------		
 
@@ -306,7 +257,44 @@ namespace IoT {
         flag = false
     }
 	
+// -------------- 7. Wifi Channel ----------------
+    //%subcategory=More
+    //%blockId=wifi_set_channel
+    //%block="WiFi set channel %channel"
+    //% weight=20
+    //% blockGap=7
+    export function wifi_set_channel(channel: string): void {
+        myChannel = channel
+        Wifi_connected = true
+        serial.writeLine("(AT+pubnubreceiver?channel=" + myChannel + ")")
+    }
 
+    //%subcategory=More
+    //%blockId=wifi_send_message
+    //%block="WiFi send message %message"
+    //% weight=20
+    //% blockGap=7
+    export function wifi_send_message(message: string): void {
+        serial.writeLine("(AT+pubnubsender?channel=" + myChannel + "&message=" + message + ")")
+    }
+
+    //%subcategory=More
+    //%blockId=wifi_ext_board_on_wifi_receieved
+    //%block="On WiFi received (WAN Command)"
+    //% weight=10
+    //% blockGap=7	
+    export function on_wifi_received(handler: () => void): void {
+        Wifi_Remote_Conn = handler;
+    }
+
+    //%subcategory=More
+    //%blockId=wifi_ext_board_wifi_command
+    //%block="WiFi command"
+    //% weight=5
+    //% blockGap=7		
+    export function control_command_Wifi(): string {
+        return wifi_cmd;
+    }
 
 }
 
