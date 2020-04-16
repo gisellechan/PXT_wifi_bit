@@ -258,27 +258,28 @@ namespace IoT {
     }
 	
 // -------------- 7. Wifi Channel ----------------
-    //%subcategory=More
-    //%blockId=wifi_set_channel
-    //%block="WiFi set channel %channel"
+    //%subcategory=More2
+    //%blockId=wifi_listen_channel
+    //%block="WiFi start listening in channel %channel"
     //% weight=20
     //% blockGap=7
-    export function wifi_set_channel(channel: string): void {
-        myChannel = channel
+    export function wifi_listen_channel(channel: string): void {
         Wifi_connected = true
+		myChannel = channel
         serial.writeLine("(AT+pubnubreceiver?channel=" + myChannel + ")")
     }
 
-    //%subcategory=More
+    //%subcategory=More2
     //%blockId=wifi_send_message
-    //%block="WiFi send message %message"
+    //%block="WiFi send message %message in channel %channel"
     //% weight=20
     //% blockGap=7
-    export function wifi_send_message(message: string): void {
-        serial.writeLine("(AT+pubnubsender?channel=" + myChannel + "&message=" + message + ")")
+    export function wifi_send_message(message: string, channel: string): void {
+        myChannel = channel
+		serial.writeLine("(AT+pubnubsender?channel=" + myChannel + "&message=" + message + ")")
     }
 
-    //%subcategory=More
+    //%subcategory=More2
     //%blockId=wifi_ext_board_on_wifi_receieved
     //%block="On WiFi received (WAN Command)"
     //% weight=10
@@ -287,7 +288,7 @@ namespace IoT {
         Wifi_Remote_Conn = handler;
     }
 
-    //%subcategory=More
+    //%subcategory=More2
     //%blockId=wifi_ext_board_wifi_command
     //%block="WiFi command"
     //% weight=5
