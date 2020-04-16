@@ -165,7 +165,7 @@ namespace IoT {
 	
 
 	// -------------- 5. LAN/WAN Repmote ----------------
-    //%subcategory=More
+    //%subcategory=Control
 	//%blockId=wifi_ext_board_start_server_LAN
     //%block="Start WiFi remote control (LAN)"
     //% weight=85
@@ -184,7 +184,7 @@ namespace IoT {
 
     }
 	
-	//%subcategory=More
+	//%subcategory=Control
     //%blockId=wifi_ext_board_start_server_WAN
     //%block="Start WiFi remote control (WAN)"
     //% weight=80
@@ -196,7 +196,7 @@ namespace IoT {
         
     }
 
-	//%subcategory=More
+	//%subcategory=Control
     //%blockId=wifi_ext_board_on_LAN_connect
     //%block="On LAN command received"
     //% weight=75
@@ -205,7 +205,7 @@ namespace IoT {
         LAN_Remote_Conn = handler;
     }
 
-	//%subcategory=More
+	//%subcategory=Control
     //%blockId=wifi_ext_board_on_wan_connect
     //%block="On WAN command received"
     //% weight=70
@@ -214,7 +214,7 @@ namespace IoT {
         WAN_Remote_Conn = handler;
     }
 
-	//%subcategory=More
+	//%subcategory=Control
     //%blockId=wifi_ext_board_lan_command
     //%block="LAN control command"
     //% weight=65
@@ -225,7 +225,7 @@ namespace IoT {
 
     }
 
-	//%subcategory=More
+	//%subcategory=Control
     //%blockId=wifi_ext_board_wan_command
     //%block="WAN control command"
     //% weight=60
@@ -239,7 +239,7 @@ namespace IoT {
 
     // -------------- 6. General ----------------		
 
-    //%subcategory=More
+    //%subcategory=Control
     //%blockId=wifi_ext_board_version
     //%block="Get firmware version"
     //% weight=30
@@ -248,7 +248,7 @@ namespace IoT {
         serial.writeLine("(AT+version)");
     }
 
-    //%subcategory=More
+    //%subcategory=Control
     //%blockId=wifi_ext_board_at
     //%block="Send AT command %command"
     //% weight=25
@@ -258,7 +258,7 @@ namespace IoT {
     }
 	
 // -------------- 7. Wifi Channel ----------------
-    //%subcategory=More2
+    //%subcategory=Channel
     //%blockId=wifi_listen_channel
     //%block="WiFi start listening in channel %channel"
     //% weight=20
@@ -269,7 +269,7 @@ namespace IoT {
         serial.writeLine("(AT+pubnubreceiver?channel=" + myChannel + ")")
     }
 
-    //%subcategory=More2
+    //%subcategory=Channel
     //%blockId=wifi_send_message
     //%block="WiFi send message %message in channel %channel"
     //% weight=15
@@ -279,7 +279,7 @@ namespace IoT {
 		serial.writeLine("(AT+pubnubsender?channel=" + myChannel + "&message=" + message + ")")
     }
 
-    //%subcategory=More2
+    //%subcategory=Channel
     //%blockId=wifi_ext_board_on_wifi_receieved
     //%block="On WiFi received (WAN Command)"
     //% weight=10
@@ -288,7 +288,7 @@ namespace IoT {
         Wifi_Remote_Conn = handler;
     }
 
-    //%subcategory=More2
+    //%subcategory=Channel
     //%blockId=wifi_ext_board_wifi_message
     //%block="WiFi message"
     //% weight=5
