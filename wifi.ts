@@ -9,9 +9,10 @@ namespace IoT {
     let Wan_connected = false
 	let Wifi_connected = false
     type EvtAct = () => void;
+	type EvtAct2 =(WiFiMessage: string) => void;
     let LAN_Remote_Conn: EvtAct = null;
     let WAN_Remote_Conn: EvtAct = null;
-	let Wifi_Remote_Conn: EvtAct = null;
+	let Wifi_Remote_Conn: EvtAct2 = null;
     let myChannel = ""
 
 
@@ -85,7 +86,7 @@ namespace IoT {
                 if (WAN_Remote_Conn) WAN_Remote_Conn()
             } else if (Wifi_connected && temp_cmd.charAt(0).compare(":") == 0) {
                 wifi_cmd = temp_cmd.substr(1, 20)
-                if (Wifi_Remote_Conn) Wifi_Remote_Conn()
+                if (Wifi_Remote_Conn) Wifi_Remote_Conn(wifi_cmd)
             } else {
 				if (temp_cmd.substr(0, 11) == "HTTP client")
 					temp_cmd = "Keep listen"
@@ -281,21 +282,13 @@ namespace IoT {
 
     //%subcategory=Channel
     //%blockId=wifi_ext_board_on_wifi_receieved
-    //%block="On WiFi received (WAN Command)"
+    //%block="On WiFi received"
     //% weight=10
-    //% blockGap=7	
-    export function on_wifi_received(handler: () => void): void {
+    //% blockGap=7	draggableParameters=reporter
+    export function on_wifi_received(handler: (WiFiMessage: string) => void): void {
         Wifi_Remote_Conn = handler;
     }
 
-    //%subcategory=Channel
-    //%blockId=wifi_ext_board_wifi_message
-    //%block="WiFi message"
-    //% weight=5
-    //% blockGap=7		
-    export function control_message_Wifi(): string {
-        return wifi_cmd;
-    }
 
 }
 
