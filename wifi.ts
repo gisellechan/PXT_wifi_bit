@@ -272,7 +272,7 @@ namespace IoT {
     //%subcategory=More2
     //%blockId=wifi_send_message
     //%block="WiFi send message %message in channel %channel"
-    //% weight=20
+    //% weight=15
     //% blockGap=7
     export function wifi_send_message(message: string, channel: string): void {
         myChannel = channel
@@ -289,11 +289,11 @@ namespace IoT {
     }
 
     //%subcategory=More2
-    //%blockId=wifi_ext_board_wifi_command
-    //%block="WiFi command"
+    //%blockId=wifi_ext_board_wifi_message
+    //%block="WiFi message"
     //% weight=5
     //% blockGap=7		
-    export function control_command_Wifi(): string {
+    export function control_message_Wifi(): string {
         return wifi_cmd;
     }
 
