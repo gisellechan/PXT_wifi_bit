@@ -7,18 +7,17 @@ namespace IoT {
 	let wifi_cmd = ""
     let Lan_connected = false
     let Wan_connected = false
+	let Wifi_remote = false
 	let Wifi_connected = false
 	let myChannel = ""
 	
-	type EvtAct =(WiFiMessage: string) => void;
+	type EvtAct =(WiFiMessage:string) => void;
     let Wifi_Remote_Conn: EvtAct = null;
-	
+	let Wifi_Conn: () => void = null;
 	let LAN_Remote_Conn: (LAN_Command:string) => void = null;
 	let WAN_Remote_Conn: (WAN_Command:string) => void = null;
   
 	
-    
-
 
     export enum httpMethod {
         //% block="GET"
@@ -88,7 +87,7 @@ namespace IoT {
             } else if (Wan_connected && temp_cmd.charAt(0).compare(":") == 0) {
                 wan_cmd = temp_cmd.substr(1, 20)
                 if (WAN_Remote_Conn) WAN_Remote_Conn(wan_cmd)
-            } else if (Wifi_connected && temp_cmd.charAt(0).compare(":") == 0) {
+            } else if (Wifi_remote && temp_cmd.charAt(0).compare(":") == 0) {
                 wifi_cmd = temp_cmd.substr(1, 20)
                 if (Wifi_Remote_Conn) Wifi_Remote_Conn(wifi_cmd)
             } else {
@@ -110,9 +109,24 @@ namespace IoT {
     export function setWifi(ssid: string, pwd: string): void {
         serial.writeLine("(AT+wifi?ssid=" + ssid + "&pwd=" + pwd + ")");
     }
+	
+    //% blockId=wifi_ext_board_on_wifi_connect
+    //% block="On WiFi connected"   
+    //% weight=133
+	//% blockGap=7	
+    export function on_wifi_connect(handler: () => void): void {
+        Wifi_Conn = handler;
+    
+    }
 
-
-
+	//% blockId=wifi_ext_board_is_wifi_connect
+    //% block="WiFi connected?"   
+    //% weight=131
+	//% blockGap=7	
+    export function is_wifi_connect(): boolean {
+        return Wifi_connected
+		
+    }
     // -------------- 3. Cloud ----------------
     //% blockId=wifi_ext_board_set_thingspeak
     //% block="Send Thingspeak key* %key|field1 %field1|field2 %field2|field3 %field3"
@@ -211,7 +225,7 @@ namespace IoT {
     }
 
 	//%subcategory=Control
-    //%blockId=wifi_ext_board_on_wan_connect
+    //%blockId=wifi_ext_board_on_WAN_connect
     //%block="On WAN command received"
     //% weight=70
 	//% blockGap=7	draggableParameters=reporter
@@ -250,7 +264,7 @@ namespace IoT {
     //% weight=20
     //% blockGap=7
     export function wifi_listen_channel(channel: string): void {
-        Wifi_connected = true
+        Wifi_remote = true
 		myChannel = channel
         serial.writeLine("(AT+pubnubreceiver?channel=" + myChannel + ")")
     }
