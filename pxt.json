@@ -5,7 +5,9 @@
     "license": "MIT",
     "dependencies": {
         "core": "*",
-		"SSD1306_OLED": "github:tinkertanker/pxt-oled-ssd1306#v2.0.7"
+		"SSD1306_OLED": "github:tinkertanker/pxt-oled-ssd1306#v2.0.7",
+		"sensor": "github:gisellechan/sensors#v0.0.1",
+        "neopixel": "github:microsoft/pxt-neopixel#v0.6.12"
     },
     "files": [
         "README.md",
