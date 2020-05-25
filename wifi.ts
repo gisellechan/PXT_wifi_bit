@@ -1,4 +1,4 @@
-namespace WiFi-IoT {
+namespace WiFiIoT {
     let flag = true;
     let httpReturnArray: string[] = []
     let temp_cmd = ""
