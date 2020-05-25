@@ -1,11 +1,13 @@
 {
-    "name": "wifi-test",
-    "version": "0.1.12",
-    "description": "This is the Wifi extension for SMARTHON Camera Kit in PXT",
+    "name": "IoT",
+    "version": "0.3.4",
+    "description": "This is the Wifi extension for SMARTHON Kit in PXT",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-		"SSD1306_OLED": "github:muselab/pxt-muselab-oled#v1.1.1"
+		"SSD1306_OLED": "github:tinkertanker/pxt-oled-ssd1306#v2.0.7",
+		"smartcity" : "github:gisellechan/smartcity#v0.1.1",
+        "neopixel": "github:microsoft/pxt-neopixel#v0.6.12"
     },
     "files": [
         "README.md",
